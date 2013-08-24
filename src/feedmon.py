@@ -2,7 +2,7 @@
 
 if __name__=="__main__":
     import modules.QA_Logger as QA_Logger
-    LOG = QA_Logger.getLogger(name="argBrute")
+    LOG = QA_Logger.getLogger(name="feedmon")
     import modules.SimpleOptparse as SimpleOptparse
     from modules.feedmon import FeedMon
         
@@ -38,7 +38,7 @@ if __name__=="__main__":
     keywords = arguments
     
     for e in fmon.search(keywords): 
-        LOG.FAIL(e)
+        LOG.warning(e)
     
     LOG.info("--DONE--")
     

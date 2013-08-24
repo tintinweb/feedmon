@@ -6,6 +6,8 @@ Created on 24.08.2013
 from feedparser import feedparser
 from future.Future import Future
 import pprint
+import modules.QA_Logger as QA_Logger
+LOG = QA_Logger.getLogger(name="feedmon")
 
 class FeedMon(object):
     
@@ -14,6 +16,7 @@ class FeedMon(object):
         self.match_fields=match_fields
     
     def addFeed(self,name,uri):
+        LOG.debug("FeedMon - addFeed - %s:%s"%(name,uri))
         self.feeds[name]=uri
         
     def addFeeds(self,var):
@@ -29,23 +32,19 @@ class FeedMon(object):
         self.feeds.update(new_feeds)
         
     def fetch(self):
+        LOG.debug("FeedMon - fetch()")
         future_calls = [Future(feedparser.parse,rss_url) for rss_url in self.feeds.values()]
         feeds = [future_obj() for future_obj in future_calls]
         entries = []
         for feed in feeds:
             entries.extend( feed[ "items" ] )
         self.feedentries=entries
-        
+        LOG.debug("FeedMon - fetch() - Done!")
         return self.entries()
     
     def entries(self):
         for e in self.feedentries:
             yield e
-            
-    def sort(self):
-        sorted_entries = sorted(self.feedentries, key=lambda entry: entry["updated"])
-        sorted_entries.reverse() # for most recent entries first
-    
     
     def setMatchFields(self,lst):
         """provide a list of rss feed keys to match on __contains__ (in) otherwise match all (slow)"""
