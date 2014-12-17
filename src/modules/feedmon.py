@@ -6,14 +6,17 @@ Created on 24.08.2013
 from feedparser import feedparser
 from future.Future import Future
 import pprint
+import datetime
 import modules.QA_Logger as QA_Logger
 LOG = QA_Logger.getLogger(name="feedmon")
 
 class FeedMon(object):
     
-    def __init__(self,feeds={},match_fields=[]):
+    def __init__(self,feeds={},match_fields=[],hours=190, minutes=0):
         self.feeds=feeds
         self.match_fields=match_fields
+        self.hours=hours
+        self.minutes=minutes
     
     def addFeed(self,name,uri):
         LOG.debug("FeedMon - addFeed - %s:%s"%(name,uri))
@@ -33,11 +36,37 @@ class FeedMon(object):
         
     def fetch(self):
         LOG.debug("FeedMon - fetch()")
+        hours=self.hours
+        minutes=self.minutes
+        now = datetime.datetime.now()
+        dt_now = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute)
         future_calls = [Future(feedparser.parse,rss_url) for rss_url in self.feeds.values()]
-        feeds = [future_obj() for future_obj in future_calls]
         entries = []
-        for feed in feeds:
-            entries.extend( feed[ "items" ] )
+        feed=None
+        for future_obj in future_calls:
+            try:
+                feed = future_obj()
+                # check feed date
+                feed_last_update = feed.get("updated_parsed") or feed.get('feed',{}).get("updated_parsed")
+                feed_last_update = datetime.datetime(feed_last_update.tm_year, feed_last_update.tm_mon, feed_last_update.tm_mday, feed_last_update.tm_hour, feed_last_update.tm_min)
+                if (dt_now-feed_last_update) > datetime.timedelta(minutes=minutes,hours=hours):
+                    LOG.info("skipping %s - not within timespan (%s:%s)"%(feed.href,hours, minutes))
+                    continue
+                # check entries date
+                filtered_feed = []
+                for f in feed['items']:
+                    e_published =f.get('published_parsed')
+                    if e_published:
+                        # check published date if available
+                        e_published = datetime.datetime(e_published.tm_year, e_published.tm_mon, e_published.tm_mday, e_published.tm_hour, e_published.tm_min)
+                        if (dt_now-e_published) > datetime.timedelta(minutes=minutes,hours=hours):
+                            continue
+                    filtered_feed.append(f) 
+                entries.extend( filtered_feed )
+            except TypeError, te:
+                LOG.error("failed to load rss feed: %s"%feed.href)
+                LOG.debug(repr(te))
+ 
         self.feedentries=entries
         LOG.debug("FeedMon - fetch() - Done!")
         return self.entries()
