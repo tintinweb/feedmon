@@ -19,21 +19,27 @@ Dependencies
 Usage
 =====
 
-
 	! - missing search keywords (arguments)
 	
-		
-	Usage: main.py  [OPTIONS] [Argument(s) ...]
+	
+	Usage: feedmon.py  [OPTIONS] [Argument(s) ...]
 	
 	Mandatory arguments to long options are mandatory for short options too.
 	
 	  -r <value>, --rss-fields=<value>           restrict search to supplied fields only.
 	                                             *** DEFAULT='summary,summary_detail,title,title_detail'
 	  -f <value>, --rss-feeds=<value>            feed uris (feed1,feed2,...).
-	                                             *** DEFAULT='http://www.exploit-db.com/rss.xml,http://www.securiteam.com/securiteam.rss,http://www.securityfocus.com/rss/vulnerabilities.xml,http://seclists.org/rss/bugtraq.rss,http://seclists.org/rss/fulldisclosure.rss,http://rss.packetstormsecurity.com/files/,http://feeds.feedburner.com/ZDI-Published-Advisories,http://feeds.feedburner.com/ZDI-Upcoming-Advisories,http://www.eeye.com/resources/media-center/rss?rss=Zero-Day-Tracker,http://www.cert.at/all.warnings.all.rss_2.0.xml,http://www.kb.cert.org/vulfeed'
+	                                             *** DEFAULT='http://www.exploit-db.com/rss.xml,http://www.securiteam.com/securiteam.rss,http://www             .securityfocus.com/rss/vulnerabilities.xml,http://seclists.org/rss/bugtraq.rss,http://seclists.org/rss/fulldisclosure.rss,http://rss.packetstor             msecurity.com/files/,http://www.heise.de/security/news/news-atom.xml,http://feeds.feedburner.com/ZDI-Published-Advisories,http://feeds.feedburn             er.com/ZDI-Upcoming-Advisories,http://www.eeye.com/resources/media-center/rss?rss=Zero-Day-Tracker,http://www.cert.at/all.warnings.all.rss_2.0.             xml,http://www.kb.cert.org/vulfeed'
 	  -h,         --help                         This help.
+	  -x <value>, --keywordsfile=<value>         load keywords from file (NL separated).
+	                                             *** DEFAULT='None'
+	  -s <value>, --hours=<value>                only check feeds newer than xx hours .
+	                                             *** DEFAULT='96'
 	  -v <value>, --verbosity=<value>            Enable verbose output.
 	                                             *** DEFAULT='20'
+	  -m,         --minutes                      only check feeds newer than xx hours .
+	
+
 	                                             
 	                                             
 Use-Cases

@@ -45,6 +45,7 @@ if __name__=="__main__":
     keywords = arguments
     
     warnings = 0
+    LOG.debug("searching for keywords in rss feed entries...")
     for e in fmon.search(keywords): 
         warnings +=1
         LOG.warning(e)

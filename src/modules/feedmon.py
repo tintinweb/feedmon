@@ -46,6 +46,7 @@ class FeedMon(object):
         for future_obj in future_calls:
             try:
                 feed = future_obj()
+                LOG.debug("* fetching %s"%feed.href)
                 # check feed date
                 feed_last_update = feed.get("updated_parsed") or feed.get('feed',{}).get("updated_parsed")
                 feed_last_update = datetime.datetime(feed_last_update.tm_year, feed_last_update.tm_mon, feed_last_update.tm_mday, feed_last_update.tm_hour, feed_last_update.tm_min)
