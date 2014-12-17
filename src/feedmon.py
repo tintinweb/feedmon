@@ -36,7 +36,7 @@ if __name__=="__main__":
         f.close()
 
     # start the magic    
-    fmon = FeedMon(hours=options['hours'],minutes=options['minutes'])
+    fmon = FeedMon(hours=int(options['hours']),minutes=int(options['minutes']))
     
     fmon.addFeeds(options['rss-feeds'])
     fmon.fetch()            
