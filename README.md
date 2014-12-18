@@ -64,7 +64,7 @@ Search specific rss feeds for 'kernel'
 	#> feedmon.py --rss-feeds=http://myownfeed.com/rss kernel
 
 
-Search specific rss feeds for 'kernel AND'
+Search specific rss feeds for 'flash AND adobe' or 'microsoft'
 
 	#> feedmon.py --verbosity=10 "flash AND adobe" microsoft
 		[2014-12-18 01:06:55,794] INFO - RSS-Fields set for scanning: ['summary', 'summary_detail', 'title', 'title_detail']
