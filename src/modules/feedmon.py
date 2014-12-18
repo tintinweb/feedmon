@@ -12,7 +12,7 @@ LOG = QA_Logger.getLogger(name="feedmon")
 
 class FeedMon(object):
     
-    def __init__(self,feeds={},match_fields=[],hours=190, minutes=0):
+    def __init__(self,feeds={},match_fields=[],hours=0, minutes=0):
         self.feeds=feeds
         self.match_fields=match_fields
         self.hours=hours
@@ -48,20 +48,22 @@ class FeedMon(object):
                 feed = future_obj()
                 LOG.debug("* fetching %s"%feed.href)
                 # check feed date
-                feed_last_update = feed.get("updated_parsed") or feed.get('feed',{}).get("updated_parsed")
-                feed_last_update = datetime.datetime(feed_last_update.tm_year, feed_last_update.tm_mon, feed_last_update.tm_mday, feed_last_update.tm_hour, feed_last_update.tm_min)
-                if (dt_now-feed_last_update) > datetime.timedelta(minutes=minutes,hours=hours):
-                    LOG.info("skipping %s - not within timespan (%s:%s)"%(feed.href,hours, minutes))
-                    continue
+                if hours or minutes:
+                    feed_last_update = feed.get("updated_parsed") or feed.get('feed',{}).get("updated_parsed")
+                    feed_last_update = datetime.datetime(feed_last_update.tm_year, feed_last_update.tm_mon, feed_last_update.tm_mday, feed_last_update.tm_hour, feed_last_update.tm_min)
+                    if (dt_now-feed_last_update) > datetime.timedelta(minutes=minutes,hours=hours):
+                        LOG.info("skipping %s - not within timespan (%s:%s)"%(feed.href,hours, minutes))
+                        continue
                 # check entries date
                 filtered_feed = []
                 for f in feed['items']:
-                    e_published =f.get('published_parsed')
-                    if e_published:
-                        # check published date if available
-                        e_published = datetime.datetime(e_published.tm_year, e_published.tm_mon, e_published.tm_mday, e_published.tm_hour, e_published.tm_min)
-                        if (dt_now-e_published) > datetime.timedelta(minutes=minutes,hours=hours):
-                            continue
+                    if hours or minutes:
+                        e_published =f.get('published_parsed')
+                        if e_published:
+                            # check published date if available
+                            e_published = datetime.datetime(e_published.tm_year, e_published.tm_mon, e_published.tm_mday, e_published.tm_hour, e_published.tm_min)
+                            if (dt_now-e_published) > datetime.timedelta(minutes=minutes,hours=hours):
+                                continue
                     filtered_feed.append(f) 
                 entries.extend( filtered_feed )
             except TypeError, te:
