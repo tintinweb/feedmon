@@ -63,3 +63,22 @@ Search specific rss feeds for 'kernel'
 
 	#> feedmon.py --rss-feeds=http://myownfeed.com/rss kernel
 
+
+Search specific rss feeds for 'kernel AND'
+
+	#> feedmon.py --verbosity=10 "flash AND adobe" microsoft
+		[2014-12-18 01:06:55,794] INFO - RSS-Fields set for scanning: ['summary', 'summary_detail', 'title', 'title_detail']
+		[2014-12-18 01:06:55,794] INFO - RSS-Feeds: ['http://www.exploit-db.com/rss.xml', 'http://www.securiteam.com/securiteam.rss', 'http://www.securityfocus.com/rss/vulnerabilities.xml', 'http://seclists.org/rss/bugtraq.rss', 'http://seclists.org/rss/fulldisclosure.rss', 'http://rss.packetstormsecurity.com/files/', 'http://www.heise.de/security/news/news-atom.xml', 'http://feeds.feedburner.com/ZDI-Published-Advisories', 'http://feeds.feedburner.com/ZDI-Upcoming-Advisories', 'http://www.eeye.com/resources/media-center/rss?rss=Zero-Day-Tracker', 'http://www.cert.at/all.warnings.all.rss_2.0.xml', 'http://www.kb.cert.org/vulfeed']
+		[2014-12-18 01:06:55,794] DEBUG - FeedMon - fetch()
+		[2014-12-18 01:06:56,709] DEBUG - * fetching http://www.exploit-db.com/rss.xml
+		[2014-12-18 01:06:57,113] DEBUG - * fetching http://www.securiteam.com/securiteam.rss
+		[2014-12-18 01:06:57,115] DEBUG - * fetching http://www.securityfocus.com/rss/vulnerabilities.xml
+		[2014-12-18 01:06:57,120] DEBUG - * fetching http://seclists.org/rss/bugtraq.rss
+		[2014-12-18 01:06:57,123] DEBUG - * fetching http://seclists.org/rss/fulldisclosure.rss
+		[2014-12-18 01:06:57,130] DEBUG - * fetching http://rss.packetstormsecurity.com/files/
+		[2014-12-18 01:06:57,135] DEBUG - * fetching http://www.heise.de/security/news/news-atom.xml
+		[2014-12-18 01:06:57,138] DEBUG - * fetching http://feeds.feedburner.com/ZDI-Published-Advisories
+		[2014-12-18 01:06:57,190] DEBUG - * fetching http://feeds.feedburner.com/ZDI-Upcoming-Advisories
+		... more feeds
+		... list of hits with entries including both flash and adobe, or microsoft
+

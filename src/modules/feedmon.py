@@ -104,8 +104,8 @@ class FeedMon(object):
     def _search(self,needle,haystack):
         if isinstance(needle,basestring):
             needle=[needle]
-        
-        return [e for e in haystack if any(n in str(e).lower() for n in needle )]
+        # split needl by " AND " and make sure all phrases in the AND line match within one entry
+        return [e for e in haystack if any( all(ph.lower() in str(e).lower() for ph in n.split(" AND ") ) for n in needle )]
           
     def search(self,needle, haystack=None): 
         haystack = haystack or self.feedentries
