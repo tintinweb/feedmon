@@ -10,6 +10,14 @@ import datetime
 import modules.QA_Logger as QA_Logger
 LOG = QA_Logger.getLogger(name="feedmon")
 
+class Feed(object):
+    def __init__(self, url):
+        self.url = url
+        self.obj = Future(feedparser.parse,url)
+        
+    def fetch(self):
+        return self.obj()
+
 class FeedMon(object):
     
     def __init__(self,feeds={},match_fields=[],hours=0, minutes=0):
@@ -40,19 +48,17 @@ class FeedMon(object):
         minutes=self.minutes
         now = datetime.datetime.now()
         dt_now = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute)
-        future_calls = [Future(feedparser.parse,rss_url) for rss_url in self.feeds.values()]
         entries = []
-        feed=None
-        for future_obj in future_calls:
+        for feedobj in (Feed(f) for f in self.feeds.values()):
             try:
-                feed = future_obj()
-                LOG.debug("* fetching %s"%feed.href)
+                feed=feedobj.fetch()
+                LOG.debug("* fetching %s"%feedobj.url)
                 # check feed date
                 if hours or minutes:
                     feed_last_update = feed.get("updated_parsed") or feed.get('feed',{}).get("updated_parsed")
                     feed_last_update = datetime.datetime(feed_last_update.tm_year, feed_last_update.tm_mon, feed_last_update.tm_mday, feed_last_update.tm_hour, feed_last_update.tm_min)
                     if (dt_now-feed_last_update) > datetime.timedelta(minutes=minutes,hours=hours):
-                        LOG.info("skipping %s - not within timespan (%s:%s)"%(feed.href,hours, minutes))
+                        LOG.info("skipping %s - not within timespan (%s:%s)"%(feedobj.url,hours, minutes))
                         continue
                 # check entries date
                 filtered_feed = []
@@ -67,7 +73,7 @@ class FeedMon(object):
                     filtered_feed.append(f) 
                 entries.extend( filtered_feed )
             except TypeError, te:
-                LOG.error("failed to load rss feed: %s"%feed.href)
+                LOG.error("failed to load rss feed: %s"%feedobj.url)
                 LOG.debug(repr(te))
  
         self.feedentries=entries
@@ -130,6 +136,7 @@ if __name__=="__main__":
              "http://www.securityfocus.com/rss/vulnerabilities.xml",
              "http://seclists.org/rss/bugtraq.rss",
              ] 
+    
     feeder.addFeeds(feeds)
     feeder.fetch()            
     feeder.setMatchFields(['summary','summary_detail','title','title_detail'])

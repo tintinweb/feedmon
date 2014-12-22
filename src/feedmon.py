@@ -5,7 +5,6 @@ if __name__=="__main__":
     LOG = QA_Logger.getLogger(name="feedmon")
     import modules.SimpleOptparse as SimpleOptparse
     from modules.feedmon import FeedMon
-        
     
     optDef = {  
             (('--help',         '-h'),     "This help"):                                   False,
