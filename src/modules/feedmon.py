@@ -49,7 +49,7 @@ class FeedMon(object):
         now = datetime.datetime.now()
         dt_now = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute)
         entries = []
-        for feedobj in (Feed(f) for f in self.feeds.values()):
+        for feedobj in [Feed(f) for f in self.feeds.values()]:
             try:
                 feed=feedobj.fetch()
                 LOG.debug("* fetching %s"%feedobj.url)
